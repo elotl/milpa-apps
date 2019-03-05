@@ -22,8 +22,6 @@ spec:
       value: "elasticsearch"
     - name: ES_JAVA_OPTS
       value: -Xms256m -Xmx256m
-  - name: heartbeat
-    image: elotl/httpheartbeat:latest
 ---
 apiVersion: v1
 kind: Service
