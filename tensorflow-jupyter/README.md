@@ -72,3 +72,7 @@ Tear down.
 jupyter
 jupyter
 ```
+
+Once Jupyter deployment and service terminate, underlying EC2 disappears automatically.
+
+![Jupyter teardown](https://github.com/elotl/milpa-apps/blob/master/tensorflow-jupyter/screenshots/jupyter-teardown.png "Jupyter teardown")
