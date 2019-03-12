@@ -12,10 +12,10 @@ spec:
       resources:
         cpu: "1"
         memory: "4Gi"
+        volumeSize: "10Gi"
       units:
       - name: jupyter
-        image: tensorflow/tensorflow
-        # image: tensorflow/tensorflow:latest-py3-jupyter
+        image: jupyter/tensorflow-notebook:latest
         env:
         - name: JUPYTER_TOKEN
           value: WorkBench
