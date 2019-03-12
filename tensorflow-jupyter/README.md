@@ -31,6 +31,10 @@ jupyter-1552420123567-4241m   1         1         Pod Running   0          bdd7a
 
 ```
 
+Notice just-in-time provisioned, right sized instance backing Jupyter:
+
+![JIT EC2](https://github.com/elotl/milpa-apps/blob/master/tensorflow-jupyter/screenshots/jit-jupyter-instance.png "JIT EC2")
+
 ### Step 3
 
 Get Ingress address of Jupyter service.
@@ -43,7 +47,23 @@ jupyter   80/TCP    0.0.0.0/0   milpa-rd7lediebk5pgq22y7ujcfvjkq-1682390382.us-e
 
 ### Step 4
 
-Point your web browser to `INGRESS ADRESS` and login to Jupyter using `JUPYTER_TOKEN` from `tf-jupyter.yml`.
+Point your web browser to `INGRESS ADRESS`, login using `JUPYTER_TOKEN` from `tf-jupyter.yml`, create a new notebook.
+
+![Jupyter login](https://github.com/elotl/milpa-apps/blob/master/tensorflow-jupyter/screenshots/jupyter-login.png "Jupyter login")
+
+### Step 5
+
+Test Tensorflow by running helloworld:
+
+```
+import tensorflow as tf
+
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session()
+print(sess.run(hello))
+```
+
+![Tensorflow helloworld](https://github.com/elotl/milpa-apps/blob/master/tensorflow-jupyter/screenshots/tensorflow-helloworld.png "Tensorflow helloworld")
 
 ### Step 5
 
