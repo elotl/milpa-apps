@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set active_page = "nodes" %}
+{% block title %}Nodes - Milpa Dashboard{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-1 mb-1 ">
+  <h2 class="h2">Nodes</h2>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+	<th>Name</th>
+	<th>Instance Type</th>
+	<th>Phase</th>
+	<th>Instance ID</th>
+	<th>IP</th>
+	<th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for node in nodes %}
+      <tr>
+	<td>{{ node.metadata.name|e }}</td>
+	<td>{{ node.spec.instanceType|e }}</td>
+	<td>{{ node.status.phase|e }}</td>
+	<td>{{ node.status.instanceID|e }}</td>
+	<td>{{ node.ip|e }}</td>
+	<td>{{ node.age|e }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

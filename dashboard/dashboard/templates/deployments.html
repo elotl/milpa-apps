@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set active_page = "deployments" %}
+{% block title %}Deployments - Milpa Dashboard{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-1 mb-1 ">
+  <h2 class="h2">Deployments</h2>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <!-- NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE -->
+      <tr>
+	<th>Name</th>
+	<th>Desired</th>
+	<th>Current</th>
+	<th>Updated</th>
+	<th>Available</th>
+	<th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for deploy in deployments %}
+      <tr>
+	<td>{{ deploy.metadata.name|e }}</td>
+	<td>{{ deploy.spec.replicas|e }}</td>
+	<td>{{ deploy.status.replicas|e }}</td>
+	<td>{{ deploy.status.updatedReplicas|default(0)|e }}</td>
+	<td>{{ deploy.spec.availableReplicas|default(0)|e }}</td>
+	<td>{{ deploy.age|e }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% set active_page = "overview" %}
+
+{% block title %}Milpa Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
+  <h2 class="h2">Milpa Cloud Costs</h2>
+</div>
+<div class="row">
+
+  <div class="col-sm-6">
+    <div class="card bg-light mb-3">
+      <div class="card-header">
+	<div class="pt-1 float-left h5">Month-to-Date Cost</div>
+	<a class="btn btn-sm btn-outline-secondary float-right" role="button" href="{{ month_details_link }}">
+	  Details
+	</a>
+      </div>
+      <div class="card-body">
+	<h2 class="card-title ">{{ month_to_date_cost }}</h2>
+	<p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="card bg-light mb-3">
+      <div class="card-header">
+	<div class="pt-1 float-left h5">Quarter-to-Date Cost</div>
+	<a class="btn btn-sm btn-outline-secondary float-right" role="button" href="{{ quarter_details_link }}">
+	  Details
+	</a>
+      </div>
+      <div class="card-body">
+	<h2 class="card-title ">{{ quarter_to_date_cost }}</h2>
+	<p class="card-text"></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+
+  <div class="col-sm-6">
+    <div class="card bg-light mb-3">
+      <div class="card-header">
+	<div class="pt-1 float-left h5">Cost Summary</div>
+      </div>
+
+      <div class="card-body">
+	<canvas class="my-4 w-100" id="monthlyChart" width="900" height="380"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="card bg-light mb-3">
+      <div class="card-header">
+	<div class="pt-1 float-left h5">Month-to-Date Cost by Category</div>
+      </div>
+      <div class="card-body">
+	<canvas class="my-4 w-100" id="categoryChart" width="900" height="380"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block chartjs %}
+<script src="static/Chart.js/2.7.3/Chart.min.js"></script>
+<script>
+ (function () {
+   'use strict'
+   var ctx = document.getElementById('monthlyChart')
+   var monthlyChart = new Chart(ctx, {{ monthly_chart|tojson }} )
+   ctx = document.getElementById('categoryChart')
+   var categoryChart = new Chart(ctx, {{ category_chart|tojson }} )
+ }())
+</script>
+{% endblock %}

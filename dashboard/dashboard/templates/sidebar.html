@@ -1,0 +1,58 @@
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+  <div class="sidebar-sticky">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'overview' }}" href="/">
+	  <span data-feather="home"></span>
+	  Overview
+	</a>
+      </li>
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'details' }}" href="details">
+	  <span data-feather="dollar-sign"></span>
+	  Cost Details
+	</a>
+      </li>
+    </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Resources</span>
+      <!-- <a class="d-flex align-items-center text-muted" href="#">
+	   <span data-feather="plus-circle"></span>
+	   </a> -->
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'pods' }}" href="pods">
+	  <span data-feather="box"></span>
+	  Pods
+	</a>
+      </li>
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'deployments' }}" href="deployments">
+	  <span data-feather="rotate-cw"></span>
+	  Deployments
+	</a>
+      </li>
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'replicasets' }}" href="replicasets">
+	  <span data-feather="layers"></span>
+	  <!-- <span data-feather="grid"></span> -->
+	  Replica Sets
+	</a>
+      </li>
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'services' }}" href="services">
+	  <span data-feather="share-2"></span>
+	  Services
+	</a>
+      </li>
+      <li class="nav-item">
+	<a class="nav-link {{ 'active' if active_page == 'nodes' }}" href="nodes">
+	  <span data-feather="server"></span>
+	  Nodes
+	</a>
+      </li>
+    </ul>
+  </div>
+</nav>

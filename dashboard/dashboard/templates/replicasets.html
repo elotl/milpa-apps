@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set active_page = "replicasets" %}
+{% block title %}Replica Sets - Milpa Dashboard{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-1 mb-1 ">
+  <h2 class="h2">Replica Sets</h2>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+	<th>Name</th>
+	<th>Desired</th>
+	<th>Current</th>
+	<th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rs in replicasets %}
+      <tr>
+	<td>{{ rs.metadata.name|e }}</td>
+	<td>{{ rs.spec.replicas|e }}</td>
+	<td>{{ rs.status.replicas|e }}</td>
+	<td>{{ rs.age|e }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

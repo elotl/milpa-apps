@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% set active_page = "pods" %}
+{% block title %}Pods - Milpa Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="pt-3 pb-1 mb-1 ">
+  <h2 class="h2">Pods</h23>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <!-- NAME      UNITS     RUNNING   STATUS    RESTARTS   NODE      IP        AGE-->
+      <tr>
+	<th>Name</th>
+	<th>Instance Type</th>
+	<th>Units</th>
+	<th>Running</th>
+	<th>Status</th>
+	<th>Restarts</th>
+	<th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pod in pods %}
+      <tr>
+	<td>{{ pod.metadata.name|e }}</td>
+	<td>{{ pod.spec.instanceType|e }}</td>
+	<td>{{ pod.spec.units|default([])|length }}</td>
+	<td>{{ pod.running_units|e }}</td>
+	<td>{{ pod.status_summary|e }}</td>
+	<td>{{ pod.restarts|e }}</td>
+	<td>{{ pod.age|e }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
