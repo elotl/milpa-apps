@@ -15,12 +15,10 @@ spec:
       annotations:
         pod.elotl.co/milpactl-volume-name: milpactl-vol
     spec:
-      instanceType: t3.micro
-      resources:
-        volumeSize: "2Gi"
+      instanceType: t3.nano
       units:
       - name: dashboard
-        image: 689494258501.dkr.ecr.us-east-1.amazonaws.com/dashboard:0.9.0
+        image: elotl/milpa-dashboard:0.9.2
         command: ["/usr/local/bin/gunicorn", "-k", "gevent", "-w", "3", "-b", ":5000", "--access-logfile", "-", "--error-logfile", "-", "dashboard:app"]
         env:
         - name: 'MILPACTL'
