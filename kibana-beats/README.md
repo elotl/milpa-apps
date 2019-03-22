@@ -12,7 +12,7 @@ Get free Milpa Developer Edition, install Milpa.
 
 ### Step 2
 
-Deploy Elasticsearch in `single-node` mode. If you are curious, look through `elasticsearch.yml` to see how it is configured.
+a) Deploy Elasticsearch in `single-node` mode. If you are curious, look through `elasticsearch.yml` to see how it is configured.
 
 ```
 # milpactl create -f elasticsearch.yml 
@@ -20,9 +20,7 @@ elasticsearch
 elasticsearch
 ```
 
-### Step 3
-
-Deploy Kibana, Metricbeat. `kibana.yml` is configured to run Kibana unit with Metricbeat. Lets create Kibana deployment and expose it via Ingress service.
+b) Deploy Kibana with Metricbeat. `kibana.yml` is configured to run Kibana unit with Metricbeat. Lets create Kibana deployment and expose it via Ingress service.
 
 ```
 # milpactl create -f kibana.yml
@@ -30,69 +28,97 @@ kibana
 kibana
 ```
 
-### Step 4
+c) Deploy Nginx with Filebeat to ship access and error logs to Elasticseach.
 
-Wait for Elasticsearch, Kibana, Metricbeat to be available (`RUNNING` state).
+```
+# milpactl create -f nginx.yml 
+nginx
+nginx
+```
+
+### Step 3
+
+Wait for Elasticsearch, Kibana (with Metricbeat), Nginx (with Filebeat) to be available (`RUNNING` state).
 
 ```
 # watch milpactl get pods
-Every 2.0s: milpactl get pods                                                                           Wed Mar  6 00:07:38 2019
+Every 2.0s: milpactl get pods                                                                Fri Mar 22 00:11:02 2019
 
 NAME                         UNITS     RUNNING   STATUS        RESTARTS   NODE                                   IP
- AGE
-elasticsearch                1         1         Pod Running   0          89f89214-0d81-4728-8f09-ef24b03503a2   172.31.77.23
- 3m
-kibana-1551830753319-n05tp   2         2         Pod Running   0          7b535505-9840-4f11-8ad9-372c63517c12   172.31.68.235
- 1m
+            AGE
+elasticsearch                1         1         Pod Running   0          1034bee8-492a-4701-974e-f690953ab75f   172.
+31.74.185   2m
+kibana-1553213347531-ppgbs   2         2         Pod Running   0          99c60028-ae76-40b8-a9e5-2d2b911408d7   172.
+31.64.75    1m
+nginx-1553213357407-2zj9v    2         2         Pod Running   0          fdcf303e-bb5d-4d2d-b861-a1354ef0b11a   172.
+31.69.253   1m
+
 ```
 
-### Step 5
+Checkout EC2 console, filter by `tag` set to `nginx`, `elasticsearch`, `kibana`, notice just-in-time provisioned right-sized nodes for our deployments.
+![EC2 JIT](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/ec2-jit.png "EC2 JIT")
+
+### Step 4
 
 Get the ingress address of Kibana.
 
 ```
-# milpactl get svc kibana
+milpactl get svc kibana
 NAME      PORT(S)   SOURCES     INGRESS ADDRESS                                                           AGE
-kibana    80/TCP    0.0.0.0/0   milpa-tptzek4l2xdbirxgcunq5vbwq4-1057411873.us-east-1.elb.amazonaws.com   2m
+kibana    80/TCP    0.0.0.0/0   milpa-tptzek4l2xdbirxgcunq5vbwq4-2145047121.us-east-1.elb.amazonaws.com   2m
 ```
 
-### Step 6
+### Step 5
 
 Access Kibana dashboard using `INGRESS ADDRESS`. Check out Kibana Pod Metrics delivered by Metricbeat.
 
-Inline-style: 
-![Kibana pod metrics 1](https://github.com/elotl/milpa-apps/tree/master/kibana-beats/screenshots/kibana1.png "Kibana pod metrics 1")
-![Kibana pod metrics 2](https://github.com/elotl/milpa-apps/tree/master/kibana-beats/screenshots/kibana2.png "Kibana pod metrics 2")
+![Kibana](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/kibana-1.png "Kibana")
+
+### Step 6
+
+
+Get Ingress Address of Nginx, then generate workload for Nginx.
+```
+# milpactl get svc nginx
+NAME      PORT(S)   SOURCES     INGRESS ADDRESS                                                          AGE
+nginx     80/TCP    0.0.0.0/0   milpa-xfladrzkzcndvfbc2xqip3ed6e-879954594.us-east-1.elb.amazonaws.com   12m
+
+# ./curl-servers.sh milpa-xfladrzkzcndvfbc2xqip3ed6e-879954594.us-east-1.elb.amazonaws.com:80
+```
+
+Look at Nginx access logs on Kibana!
+![Nginx logs](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/nginx-filebeat-logs.png "Nginx logs")
 
 ### Step 7
 
-Lets scale Kibana deployment from 1 pod up to 3 pods!
-
-```
-```
-
-### Step 8
-
-Lets check out Kibana deployment metrics from Kibana dashboard. We should now see metrics from 3 Metricbeats from the 3 Kibana pods!
-
-Lets also look at our EC2 console page for all EC2 instances with `app:kibana` tags. We should now see 2 new right sized EC2 instances corresponding to the 2 new pods spun up during scale up.
-
-### Step 9
-
-Interested in a serverless standalone Beat that is not colocated with any pod? Deploy heartbeat pod to see how that will work. Heartbeat is configured to ping two http services: `elasticsearch` service we deployed in Step 2, and `www.google.com`.
-
-```
-```
-
-### Step 10
-
-From Kibana dashboard's discover tab, we should now see hearbeats from `elasticsearch` service and `www.google.com`.
-
-### Step 11
-
 Tear down.
 
+a) Terminate `curl-servers.sh` process.
+
+b) Terminate Elasticsearch, Kibana, Nginx deployments.
+
 ```
+# milpactl delete -f elasticsearch.yml 
+elasticsearch
+elasticsearch
+
+# milpactl delete -f kibana.yml 
+kibana
+kibana
+
+# milpactl delete -f nginx.yml 
+nginx
+nginx
 ```
 
+Verify that your underlying EC2 instances with `app:nginx`, `app:kibana`, `app:elasticsearch` tags have disappeared.
 
+![EC2 after](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/ec2-after.png "ec2-after")
+
+## Coming soon
+
+Elasticsearch Instance Store support
+
+## Questions/comments
+
+Please file and issue or reach out to Elotl at info@elotl.co .
