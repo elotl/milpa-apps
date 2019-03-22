@@ -56,7 +56,7 @@ nginx-1553213357407-2zj9v    2         2         Pod Running   0          fdcf30
 ```
 
 Checkout EC2 console, filter by `tag` set to `nginx`, `elasticsearch`, `kibana`, notice just-in-time provisioned right-sized nodes for our deployments.
-![EC2 JIT](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/ec2-jit.png "EC2 JIT")
+![EC2 JIT](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/ec2-jit1.png "EC2 JIT")
 
 ### Step 4
 
