@@ -1,6 +1,14 @@
 # Milpa Dashboard
 The Milpa Dashboard is a web UI that allows users to view the cloud costs associated with a Milpa cluster and also view the resources running on the cluster.
 
+## Screenshots
+
+### Cost Overview
+![Cost Overview Screenshot](/screenshots/DashboardOverview.png?raw=true "Cost Overview")
+
+### Cost Details
+![Cost Details Screenshot](/screenshots/DashboardDetails.png?raw=true "Cost Details")
+
 ## Running the Dashboard
 Download the dashboard manifest from github and use milpactl to create the dashboard.
 
