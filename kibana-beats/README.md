@@ -8,7 +8,7 @@ This tutorial deploys Milpa, Kibana, Beats on AWS. The tutorial deploys Elastics
 
 ### Step 1
 
-Get free Milpa Developer Edition, install Milpa.
+[Get free Milpa Developer Edition](https://www.elotl.co/trial), install Milpa.
 
 ### Step 2
 
