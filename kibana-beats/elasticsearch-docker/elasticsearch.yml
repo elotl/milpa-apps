@@ -1,7 +1,8 @@
-cluster.name: "elotl-elasticsearch-cluster"
+cluster.name: "milpa-elasticsearch-cluster"
 network.host: 0.0.0.0
 http.port: 9200
 transport.host: localhost
 transport.tcp.port: 9300
 transport.tcp.compress: true
 xpack.monitoring.collection.enabled: true
+path.data: /data/storage

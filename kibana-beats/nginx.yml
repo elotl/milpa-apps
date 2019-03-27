@@ -17,6 +17,11 @@ spec:
         - name: nginx-log-shared-volume
           emptyDir: {} 
       units:
+        - name: metricbeat
+          image: docker.elastic.co/beats/metricbeat:6.6.1
+          env:
+            - name: ELASTICSEARCH_URL
+              value: http://elasticsearch:9200
         - name: filebeat
           image: elotl/nginxfilebeat:latest
           volumeMounts:

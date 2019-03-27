@@ -10,7 +10,7 @@ spec:
         app: kibana
     spec:
       resources:
-        cpu: "1"
+        cpu: "0.5"
       units:
       - name: kibana
         image: kibana:6.6.1
