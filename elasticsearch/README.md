@@ -1,4 +1,4 @@
-# Serverless Kibana, Beats
+# Serverless Elasticsearch, Kibana, and Beats
 
 ## Introduction
 
@@ -48,7 +48,7 @@ kibana
 
 ### Step 3: Wait for Running
 
-Wait for Elasticsearch, Kibana (with Metricbeat), Nginx (with Filebeat) to be running (`STATUS` == `Pod Running`).
+Wait for Elasticsearch, Kibana, and Nginx to be running (`STATUS` == `Pod Running`).
 
 ```bash
 $ watch milpactl get pods
@@ -92,9 +92,9 @@ In the Logs UI of Kibana, we can see the Nginx access logs delivered to elastics
 ![Nginx logs](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/nginx-filebeat-logs.png "Nginx logs")
 
 ### Step 7: Teardown
-We've successfully walked through setting up elasticsearch and systems to generate and view logs.  All of this was done using Milpa instead of building out servers manually.  Since we're done with them, lets delete the pods and services:
+That's all there is to it!  We've successfully walked through setting up elasticsearch and related systems to generate and view logs and metrics.  All of this was done using Milpa instead of building out servers manually.  Since we're done with this demonstration, lets delete the pods and services:
 
-a) Terminate `curl-servers.sh` process with a `Ctrl-C`
+a) Terminate the `curl-servers.sh` process with a `Ctrl-C`
 
 b) Delete the Elasticsearch, Kibana and Nginx pods and services:
 
@@ -117,8 +117,8 @@ Verify that your underlying EC2 instances with `app:nginx`, `app:kibana`, `app:e
 ![EC2 after](https://github.com/elotl/milpa-apps/blob/master/kibana-beats/screenshots/ec2-after.png "ec2-after")
 
 ## Further Work: Reliability
-The elasticsearch cluster we setup has no long-term durability. If the instance gets terminated or there are disk problems, the cluster data will be lost. While we could run a larger, replicated cluster and hope we don't experience parallel failures, a simpler and more cost-effective solution is to periodically snapshot and backup the cluster to cloud storage. Lucky for us there are [Elasticsearch plugins](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html) that take care of the snapshot and restore from cloud storage.  Snapshotting is a great way to ensure durability for a cluster that can tolerate a small window of dataloss in the event of a disaster. We've used snapshotting to great success in our work at Elotl and at other companies.
+The elasticsearch cluster we setup has no long-term durability. If the instance gets terminated or there are disk problems, the cluster data will be lost. While we could run a larger, replicated cluster and hope we don't experience parallel failures, a simpler and more cost-effective solution is to periodically snapshot and backup the cluster to cloud storage. Lucky for us there are [Elasticsearch plugins](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html) that take care of the snapshot and restore from cloud storage.  Snapshotting is a great way to ensure durability for a cluster that can tolerate a small window of data loss in the event of a disaster. We've used snapshotting to great success in our work at Elotl and at other companies.
 
 ## Questions/comments
 
-If you have questions or comments, reach out to Elotl at info@elotl.co or file an issue.
+If you have questions or comments, feel free to reach out to Elotl at info@elotl.co or file an issue in this repo.
