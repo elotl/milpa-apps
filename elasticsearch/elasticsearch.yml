@@ -11,9 +11,6 @@ spec:
   - name: shared-volume
     emptyDir: {}
   initUnits:
-  - name: init-sysctl
-    image: ubuntu:bionic
-    command: ["sysctl", "-w", "vm.max_map_count=262144"]
   - name: formatter
     image: ubuntu:bionic
     command: ["/bin/sh", "-c"]
@@ -21,6 +18,9 @@ spec:
     volumeMounts:
     - mountPath: /data
       name: shared-volume
+  - name: init-sysctl
+    image: ubuntu:bionic
+    command: ["sysctl", "-w", "vm.max_map_count=262144"]
   units:
   - name: elasticsearch
     image: elotl/elasticsearch:latest
