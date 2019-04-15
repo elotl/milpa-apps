@@ -71,7 +71,8 @@ class CostBucket(object):
         startstr = self.start.strftime('%Y%m%d')
         endstr = self.end.strftime('%Y%m%d')
         s = '<CostBucket: {} - {}, items: {}: total: {} c5-large> {}'.format(
-            startstr, endstr, self.items, self.total_cost, self.specific_type_costs['c5.large'])
+            startstr, endstr, self.items, self.total_cost,
+            self.specific_type_costs)
         return s
 
 
@@ -185,12 +186,6 @@ class Chart(object):
                 aggregate[specific_type].append(moneyround(cost))
 
         return aggregate.keys(), aggregate.values()
-
-        # aggregate = defaultdict(list)
-        # for b in self.buckets:
-        #     for category, cost in b.specific_type_costs.items():
-        #         aggregate[category].append(moneyround(cost))
-        # return aggregate.keys(), aggregate.values()
 
 
     def __repr__(self):
