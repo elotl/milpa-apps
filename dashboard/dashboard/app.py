@@ -230,13 +230,13 @@ def illegal_selector_msg(selector):
     go ahead and sanitize our inputs.
     '''
     selector_chars = r'[a-zA-Z0-9()._\-/=!, ]'
-    bad_chars = []
+    bad_chars = set()
     for c in selector:
         if not re.match(selector_chars, c):
-            bad_chars.append(c)
+            bad_chars.add(c)
     if bad_chars:
         charstr = ', '.join(bad_chars)
-        return "Bad characters in filter labels: {}".format(charstr)
+        return "Bad characters in filter labels: " + charstr
 
 
 # Todo: consider packaging pricing data into the container for
