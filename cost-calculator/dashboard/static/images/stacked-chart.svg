@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="feather feather-bar-chart-2"
+   id="svg3388"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="stacked-chart.svg">
+  <metadata
+     id="metadata3400">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3398" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1856"
+     inkscape:window-height="1050"
+     id="namedview3396"
+     showgrid="true"
+     inkscape:snap-to-guides="true"
+     inkscape:snap-grids="false"
+     inkscape:zoom="37.375"
+     inkscape:cx="11.973244"
+     inkscape:cy="12"
+     inkscape:window-x="64"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3388">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4343" />
+  </sodipodi:namedview>
+  <line
+     x1="18"
+     y1="20.002142"
+     x2="18"
+     y2="15.563076"
+     id="line3390"
+     style="stroke-width:2" />
+  <line
+     x1="11.999999"
+     y1="19.990793"
+     x2="11.999999"
+     y2="7.7282686"
+     id="line3392"
+     style="stroke-width:1.99999988" />
+  <line
+     x1="6"
+     y1="20"
+     x2="6"
+     y2="14"
+     id="line3394" />
+  <line
+     x1="5.9933109"
+     y1="16.859533"
+     x2="5.9933109"
+     y2="10.85953"
+     id="line3394-9"
+     style="opacity:0.5" />
+  <line
+     x1="11.986623"
+     y1="19.558529"
+     x2="11.986623"
+     y2="3.5585284"
+     id="line3392-1"
+     style="opacity:0.5" />
+  <line
+     x1="18.006689"
+     y1="16.793917"
+     x2="18.006689"
+     y2="7.9017353"
+     id="line3390-2"
+     style="stroke-width:2;opacity:0.5" />
+</svg>
