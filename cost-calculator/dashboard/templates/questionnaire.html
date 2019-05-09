@@ -54,15 +54,15 @@
 
 {% endblock %}
 
-{% block chartjs %}
-<script src="static/Chart.js/2.7.3/Chart.min.js"></script>
-<script>
- (function () {
-   'use strict'
-   var ctx = document.getElementById('monthlyChart')
-   var monthlyChart = new Chart(ctx, {{ monthly_chart|tojson }} )
-   ctx = document.getElementById('categoryChart')
-   var categoryChart = new Chart(ctx, {{ category_chart|tojson }} )
- }())
-</script>
-{% endblock %}
+<!-- {% block chartjs %}
+     <script src="static/Chart.js/2.7.3/Chart.min.js"></script>
+     <script>
+     (function () {
+     'use strict'
+     var ctx = document.getElementById('monthlyChart')
+     var monthlyChart = new Chart(ctx, {{ monthly_chart|tojson }} )
+     ctx = document.getElementById('categoryChart')
+     var categoryChart = new Chart(ctx, {{ category_chart|tojson }} )
+     }())
+     </script>
+     {% endblock %} -->
