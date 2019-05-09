@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
-  <h3 class="h3">Infrastructure Questionnaire</h3>
+  <h3 class="h3">On-Prem Infrastructure Questionnaire</h3>
 </div>
 <div class="container">
   <form>
@@ -27,10 +27,36 @@
         <input type="number" class="form-control" id="inputPassword3" placeholder="vCPU count">
       </div>
     </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Destination Cloud Region</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelect01">
+        <option selected>Choose...</option>
+        <option value="1">US East (N. Virginia)</option>
+        <option value="2">US East (Ohio)</option>
+        <option value="3">US West (N. California)</option>
+        <option value="4">US West (Oregon)</option>
+        <option value="5">Asia Pacific (Hong Kong)</option>
+        <option value="6">Asia Pacific (Mumbai)</option>
+        <option value="7">Asia Pacific (Seoul)</option>
+        <option value="8">Asia Pacific (Singapore)</option>
+        <option value="9">Asia Pacific (Sydney)</option>
+        <option value="10">Asia Pacific (Tokyo)</option>
+        <option value="11">Canada (Central)</option>
+        <option value="12">China (Beijing)</option>
+        <option value="13">China (Ningxia)</option>
+        <option value="14">EU (Frankfurt)</option>
+        <option value="15">EU (Ireland)</option>
+        <option value="16">EU (London)</option>
+        <option value="17">EU (Paris)</option>
+        <option value="18">EU (Stockholm)</option>
+        <option value="19">South America (São Paulo)</option>
+      </select>
+    </div>
 
     <div class="form-group row">
-        <button type="submit" class="btn btn-primary">AWS Cost Estimate</button>
-        <button type="submit" class="btn btn-primary disabled">Azure Cost Estimate</button>
+        <button type="submit" class="btn btn-primary">AWS Compute Cost Estimate</button>
     </div>
   </form>
 </div>
