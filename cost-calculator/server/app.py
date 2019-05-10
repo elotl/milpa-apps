@@ -1,6 +1,6 @@
 import logging
 import functools
-from dashboard.instance_selector import make_instance_selector
+from server.instance_selector import make_instance_selector
 from flask import Flask, request
 import flask
 
