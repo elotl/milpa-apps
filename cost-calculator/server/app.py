@@ -16,7 +16,6 @@ def setup():
     global instance_selector
     instance_selector = make_instance_selector
 
-
 def handle_exception(e, *args, **kwargs):
     error_message = 'Error processing request. ' + str(e)
     kwargs['error_message'] = error_message
@@ -47,9 +46,9 @@ def questionnaire():
     return flask.render_template('questionnaire.html')
 
 
-@app.route('/cost')
+@app.route('/cost', methods=['GET', 'POST'])
 def get_cost():
     data = request.get_json()
-    return flask.render_template('costq.html')
+    return flask.render_template('cost.html')
     # go through and use the instance selector to calculate
     # price and
