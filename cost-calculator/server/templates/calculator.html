@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+{% set active_page = "calculator" %}
+
+{% block title %}Cloud Cost Calculator{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
+  <h3 class="h3">On-Prem Infrastructure Questionnaire</h3>
+</div>
+<div class="container">
+  <ul>Todo:
+    <li>resize everything</li>
+    <li>add region</li>
+    <li>add aws block storage costs</li>
+    <li>add azure</li>
+    <li>Add instructions</li>
+    <li>Add info explaining each line</li>
+    <li> Might want to allow user to specify the cpu reservation in different units? E.G This app uses 20% of a cpu?</li>
+  </ul>
+</div>
+<hr>
+
+<div id="app">
+  <div class="container">
+    <div class="col-md-1">
+    </div>
+    <b-form @submit="onSubmit">
+      <template v-for="(form, index) in items">
+	<div class="row pt-5">
+	  <div class="col input-group">
+	    <div class="input-group-prepend">
+	      <span class="input-group-text">Workload Name</span>
+	    </div>
+	    <b-form-input v-model="form.workloadName" type="text" class="form-control" name="workloadName" v-bind:placeholder="'Workload ' + (index + 1)"></b-form-input>
+	  </div>
+	  <div class="col-md-1 align-self-end">
+	    <button v-on:click=onDeleteRow(index) class="btn btn-link">
+	      <span class="trash-icon" data-feather="trash-2"></span>
+	    </button>
+	  </div>
+	</div>
+
+	<!-- <div class="form-group row pt-4">
+	     <div class="col">
+	     <div class="input-group-prepend">
+	     <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
+	     </div>
+	     <b-form-input v-model="form.groupName" type="text" class="form-control" name="groupName" v-bind:placeholder="'Workload ' + (index + 1)"></b-form-input>
+
+	     </div>
+	     </div>
+	-->
+	  <div class="form-group row pt-2 pb-4">
+	  <div class="col">
+	    <label label-for="quantity"><span class="small">Quantity</span>
+	      <a v-b-popover.hover="'The number of replicas of this application'" class="btn-primary-outline">
+		<span class="info-icon" data-feather="info"></span>
+	      </a>
+	    </label>
+	    <input v-model.number="form.quantity" type="number" class="form-control right-text" name="quantity">
+	    <span class="min-max">(1-10000)</span>
+	  </div>
+	  <div class="col">
+	    <label for="cpu"><span class="small">vCPU</span>
+	      <a v-b-popover.hover="'Number of vCPUs/hyperthreads used by the application. One physical core is composed 2 vCPUs. Fractional values are OK.'" class="btn-primary-outline">
+		<span class="info-icon" data-feather="info"></span>
+	      </a>
+	    </label>
+	    <input v-model.number="form.cpu" type="number" class="form-control right-text" name="cpu">
+	    <span class="min-max">(1-128)</span>
+	  </div>
+	  <div class="col">
+	    <label for="memory"><span class="small">Memory (GB)</span>
+	      <a v-b-popover.hover="'Amount of memory used by the application'" class="btn-primary-outline">
+		<span class="info-icon" data-feather="info"></span>
+	      </a>
+	    </label>
+	    <input v-model.number="form.memory" type="number" class="form-control right-text" name="memory">
+	    <span class="min-max">(1-12000)</span>
+	  </div>
+	  <div class="col">
+	    <label for="blockStorage"><span class="small">Block Storage (GB)</span>&nbsp;
+	    </label>
+	    <input v-model.number="form.blockStorage" type="number" class="form-control right-text" name="blockStorage">
+	    <span class="min-max">(1-16000)</span>
+	  </div>
+	  <div class="col-md-1">
+	  </div>
+
+	</div>
+      </template>
+
+      <div class="row">
+	<div class="col align-self-end">
+	  <button v-on:click=addRow class="btn-link btn-transparent">
+	    <span data-feather="plus-circle"></span> Add Workload
+     </b-button>
+	</div>
+      </div>
+      <div class="row">
+	<div class="offset-md-9 col-2 pt-4">
+	  <b-button class="btn-block" type="submit" variant="primary">Calculate</b-button>
+	</div>
+      </div>
+    </b-form>
+
+    <hr>
+
+    <div v-if="showCost">
+      <h3>Estimated Cloud Costs</h3>
+      <container>
+	<strong>
+	  <div class="row justify-content-center text-right">
+	    <div class="col-md-2 offset-md-6">Hourly Cost:</div>
+	    <div class="col-md-2">$[[ parseFloat(cost.hourlyCost.toFixed(4)) ]]</div>
+	  </div>
+	  <div class="row justify-content-center text-right">
+	    <div class="col-md-2 offset-md-6">Monthly Cost:</div>
+	    <div class="col-md-2">$[[ parseFloat((cost.hourlyCost * 720).toFixed(2)) ]]</div>
+	  </div>
+	  <div class="row justify-content-center text-right">
+	    <div class="col-md-2 offset-md-6">Yearly Cost:</div>
+	    <div class="col-md-2">$[[ parseFloat((cost.hourlyCost * 8760).toFixed(2)) ]]</div>
+	  </div>
+	</strong>
+      </container>
+      <h3>Estimate Details</h3>
+      <container>
+      <table class="table">
+	<thead class="thead-light">
+	  <tr>
+	    <th scope="col">Workload Name</th>
+	    <th scope="col">Instance Type</th>
+	    <th scope="col">Instance Hourly Cost</th>
+	    <th scope="col">Workload Hourly Cost</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <template v-for="(item, index) in costDetails">
+	    <tr>
+	      <td>[[ item.workloadName ]]</td>
+	      <td>[[ item.instanceType ]]</td>
+	      <td>$[[ parseFloat(item.instanceHourlyCost.toFixed(4)) ]]</td>
+	      <td>$[[ parseFloat(item.hourlyCost.toFixed(2)) ]]</td>
+	    </tr>
+	  </template>
+	</tbody>
+      </table>
+      </container>
+    </div>
+
+
+
+    <!-- <b-card class="mt-3" header="Form Data Result">
+	 <pre class="m-0">[[ items ]]</pre>
+	 </b-card>
+	 <div v-if="showCost">
+	 <b-card class="mt-3" header="Response">
+	 <pre class="m-0">[[ costDetails ]]</pre>
+	 </b-card>
+	 </div> -->
+  </div>
+</div>
+
+
+
+
+
+<!--
+
+
+     <div class="container">
+     <form action="calculate_cost" method="POST" role="form" class="form-horizontal">
+
+     <div class="form-group row pb-4">
+     <div class="col-md-1">
+     </div>
+     <div class="col-md-2">
+     <label for="groupName">VM Group Name</label>
+     <input type="text" name="groupName" class="form-control" id="vm_group_1" aria-describedby="vm_group_1_help" value="VM Group 1" maxlength="250">
+     <span class="min-max"></span>
+     </div>
+     <div class="col-md-2">
+     <label for="quantity_1">Quantity</label>
+     <input type="number" name="quantity_1" class="form-control right-text" id="quantity_1" aria-describedby="quantity_1_help" value="1" maxlength="20">
+     <span class="min-max">(1-10000)</span>
+     </div>
+     <div class="col-md-2">
+     <label for="cpu_1">vCPU</label>
+     <input type="number" name="cpu_1" class="form-control right-text" id="cpu_1" aria-describedby="cpu_1_help" value="1" maxlength="20">
+     <span class="min-max">(1-128)</span>
+     </div>
+     <div class="col-md-2">
+     <label for="memory_1">Memory (GB)</label>
+     <input type="number" name="memory_1" class="form-control right-text" id="memory_1" aria-describedby="memory_1_help" value="1" maxlength="20">
+     <span class="min-max">(1-12000)</span>
+     </div>
+     <div class="col-md-2">
+     <label for="block_storage_1">Block Storage (GB)</label>
+     <input type="number" name="block_storage_1" class="form-control right-text" id="block_storage_1" aria-describedby="block_storage_1_help" value="0" maxlength="20">
+     <span class="min-max">(1-16000)</span>
+     </div>
+     <div class="col-md-1 align-self-end">
+     <span class="trash_1" data-feather="trash-2"></span>
+     </div>
+     </div>
+
+
+
+
+     <div class="form-group row pb-4">
+     <div class="col-md-1">
+     </div>
+     <div class="col-md-2">
+     <label for="vm_group_1">VM Group Name</label>
+     <input type="text" name="vm_group_1" class="form-control" id="vm_group_1" aria-describedby="vm_group_1_help" value="VM Group 1" maxlength="250">
+     <span class="min-max"></span>
+     </div>
+     <div class="col-md-2">
+     <label for="quantity_1">Quantity</label>
+     <input type="number" name="quantity_1" class="form-control right-text" id="quantity_1" aria-describedby="quantity_1_help" value="1" maxlength="20">
+     <span class="min-max">(1-10000)</span>
+     </div>
+     <div class="col-md-2">
+     <label for="cpu_1">vCPU</label>
+     <input type="number" name="cpu_1" class="form-control right-text" id="cpu_1" aria-describedby="cpu_1_help" value="1" maxlength="20">
+     <span class="min-max">(1-128)</span>
+     </div>
+     <div class="col-md-2">
+     <label for="memory_1">Memory (GB)</label>
+     <input type="number" name="memory_1" class="form-control right-text" id="memory_1" aria-describedby="memory_1_help" value="1" maxlength="20">
+     <span class="min-max">(1-12000)</span>
+     </div>
+     <div class="col-md-2">
+     <label for="block_storage_1">Block Storage (GB)</label>
+     <input type="number" name="block_storage_1" class="form-control right-text" id="block_storage_1" aria-describedby="block_storage_1_help" value="0" maxlength="20">
+     <span class="min-max">(1-16000)</span>
+     </div>
+     <div class="col-md-1 align-self-end">
+     <span class="trash_1" data-feather="trash-2"></span>
+     </div>
+     </div>
+     <div class="form-group row align-items-end">
+     <div class="col-md-1">
+     </div>
+
+     <div class="col col-md-2">
+     <span data-feather="plus-circle"></span>
+     Add Workload
+     </button>
+     </div>
+     </div>
+     <div class="row">
+     <div class="offset-md-7 col-md-4 justify-content-end right-text">
+     <button type="button" class="btn btn-primary btn-lg">
+     Calculate Cloud Costs
+     </button>
+     </div>
+     </div>
+     </form>
+
+     <hr>
+     </div>
+-->
+
+<script src="static/calculator.js"></script>
+
+<!--
+     </div>
+
+     <div class="container">
+     <form action="cost" method="POST" role="form" class="form-horizontal">
+     <div class="form-group row">
+     <label for="inputAppCount" class="col-sm-2 col-form-label">Number of Application VMs</label>
+     <div class="col-sm-10">
+     <input type="number" class="form-control" id="inputAppCount[]" placeholder="app count">
+     </div>
+     </div>
+     <div class="form-group row">
+     <label for="inputMemRes" class="col-sm-2 col-form-label">Memory Reservation / VM</label>
+     <div class="col-sm-10">
+     <input type="number" class="form-control" id="inputMemRes[]" placeholder="GiB">
+     </div>
+     </div>
+     <div class="form-group row">
+     <label for="inputCpuRes" class="col-sm-2 col-form-label">CPU Reservation / VM</label>
+     <div class="col-sm-10">
+     <input type="number" class="form-control" id="inputCpuRes[]" placeholder="vCPU count">
+     </div>
+     </div>
+     <div class="form-row">
+     <div class="form-group col-md-6">
+     <label for="inputCity">VM uptime / year</label>
+     <input type="text" class="form-control" id="inputUptime[]">
+     </div>
+     <div class="form-group col-md-4">
+     <label for="inputUptimeUnit">Unit</label>
+     <select id="inputUptimeUnit[]" class="form-control">
+     <option selected>Choose...</option>
+     <option>Minutes</option>
+     <option>Hours</option>
+     <option>Days</option>
+     </select>
+     </div>
+     </div>
+     <div class="input-group mb-3">
+     <div class="input-group-prepend">
+     <label class="input-group-text" for="region">Stateless / Stateful</label>
+     </div>
+     <select class="custom-select" id="stateful[]">
+     <option selected>Choose...</option>
+     <option value="1">Stateless</option>
+     <option value="2">Stateful</option>
+     </select>
+     </div>
+     <div class="input-group mb-3">
+     <div class="input-group-prepend">
+     <label class="input-group-text" for="region">Destination Cloud Region</label>
+     </div>
+     <select class="custom-select" id="region[]">
+     <option selected>Choose...</option>
+     <option value="1">US East (N. Virginia)</option>
+     <option value="2">US East (Ohio)</option>
+     <option value="3">US West (N. California)</option>
+     <option value="4">US West (Oregon)</option>
+     <option value="5">Asia Pacific (Hong Kong)</option>
+     <option value="6">Asia Pacific (Mumbai)</option>
+     <option value="7">Asia Pacific (Seoul)</option>
+     <option value="8">Asia Pacific (Singapore)</option>
+     <option value="9">Asia Pacific (Sydney)</option>
+     <option value="10">Asia Pacific (Tokyo)</option>
+     <option value="11">Canada (Central)</option>
+     <option value="12">China (Beijing)</option>
+     <option value="13">China (Ningxia)</option>
+     <option value="14">EU (Frankfurt)</option>
+     <option value="15">EU (Ireland)</option>
+     <option value="16">EU (London)</option>
+     <option value="17">EU (Paris)</option>
+     <option value="18">EU (Stockholm)</option>
+     <option value="19">South America (São Paulo)</option>
+     </select>
+     </div>
+     <div class="form-group row">
+     <button type="submit" class="btn btn-primary">AWS Compute Cost Estimate</button>
+     </div>
+     </form>
+     </div>
+-->
+
+{% endblock %}
+
+<!-- {% block chartjs %}
+     <script src="static/Chart.js/2.7.3/Chart.min.js"></script>
+     <script>
+     (function () {
+     'use strict'
+     var ctx = document.getElementById('monthlyChart')
+     var monthlyChart = new Chart(ctx, {{ monthly_chart|tojson }} )
+     ctx = document.getElementById('categoryChart')
+     var categoryChart = new Chart(ctx, {{ category_chart|tojson }} )
+     }())
+     </script>
+     {% endblock %} -->

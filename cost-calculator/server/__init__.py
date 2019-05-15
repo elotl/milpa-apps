@@ -1,3 +1,2 @@
 # this makes gunicorn work
-from dashboard.app import app
-
+from server.app import app

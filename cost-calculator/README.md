@@ -10,4 +10,5 @@ d) Destination cloud region
 e) What percentage of applications are stateful?
 ```
 
+
 Output cost estimate.

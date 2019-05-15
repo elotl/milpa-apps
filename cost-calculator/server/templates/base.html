@@ -9,29 +9,53 @@
 
     <title>{% block title %}{% endblock %}</title>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-
     <style>
-     .bd-placeholder-img {
-       font-size: 1.125rem;
-       text-anchor: middle;
-       -webkit-user-select: none;
-       -moz-user-select: none;
-       -ms-user-select: none;
-       user-select: none;
+     .form-control {
+       display: inline-block;
      }
 
-     @media (min-width: 768px) {
-       .bd-placeholder-img-lg {
-         font-size: 3.5rem;
-       }
+     .right-text {
+       text-align: right;
      }
+
+     .btn-transparent {
+       background-color: transparent;
+       border-color: transparent;
+     }
+
+     .min-max {
+       font-size: .8rem;
+       bottom:-20px;
+       position:absolute;
+       right:1.2em;
+       color: #969696;
+     }
+
+     .info-icon {
+       color: gray;
+       height: 1em;
+       width: 1em;
+       vertical-align: middle;
+     }
+
     </style>
     <!-- Custom styles for this template -->
+
     <link href="static/dashboard.css" rel="stylesheet">
-    <script>window.jQuery || document.write('<script src="static/jquery/jquery-3.3.1.slim.min.js"><\/script>')</script>
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CMutationObserver" crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <!-- Async requests -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
+  <body>
 
   {% include 'navbar.html' %}
   <div class="container-fluid">
@@ -52,7 +76,6 @@
   </div>
 
   <script src="static/popper/popper.min.js"></script>
-  <script src="static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
   <script src="static/feather/feather.min.js"></script>
   <script>
    feather.replace()
