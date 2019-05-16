@@ -8,57 +8,59 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
   <h3 class="h3">On-Prem Infrastructure Questionnaire</h3>
 </div>
-<div class="container">
-  <ul>Todo:
-    <li>resize everything</li>
-    <li>add region</li>
-    <li>add aws block storage costs</li>
-    <li>add azure</li>
-    <li>Add instructions</li>
-    <li>Add info explaining each line</li>
-    <li> Might want to allow user to specify the cpu reservation in different units? E.G This app uses 20% of a cpu?</li>
-  </ul>
-</div>
 <hr>
 
 <div id="app">
+
   <div class="container">
     <div class="col-md-1">
     </div>
+
+    <div class="row">
+      <div class="col-md-3">
+	<template>
+	  <div>
+	    <b-form-select class="selectpicker" v-model="selectedCloud" :options="cloudOptions" v-on:change=onChangeCloud></b-form-select>
+	  </div>
+	</template>
+      </div>
+
+      <div class="col-md-3">
+	<template>
+	  <div>
+	    <b-form-select class="selectpicker" v-model="selectedRegion" :options="regionOptions"></b-form-select>
+	  </div>
+	</template>
+      </div>
+    </div>
+
     <b-form @submit="onSubmit">
       <template v-for="(form, index) in items">
 	<div class="row pt-5">
-	  <div class="col input-group">
-	    <div class="input-group-prepend">
-	      <span class="input-group-text">Workload Name</span>
+	  <div class="col">
+	    <div class="input-group input-group-sm">
+	      <div class="input-group-prepend">
+		<span class="input-group-text">Workload Name</span>
+	      </div>
+	      <b-form-input v-model="form.workloadName" type="text" class="form-control form-control-sm" name="workloadName" v-bind:placeholder="'Workload ' + (index + 1)"></b-form-input>
 	    </div>
-	    <b-form-input v-model="form.workloadName" type="text" class="form-control" name="workloadName" v-bind:placeholder="'Workload ' + (index + 1)"></b-form-input>
 	  </div>
 	  <div class="col-md-1 align-self-end">
-	    <button v-on:click=onDeleteRow(index) class="btn btn-link">
+	    <button v-on:click=onDeleteRow(index) type="button" class="btn btn-link">
 	      <span class="trash-icon" data-feather="trash-2"></span>
 	    </button>
 	  </div>
 	</div>
 
-	<!-- <div class="form-group row pt-4">
-	     <div class="col">
-	     <div class="input-group-prepend">
-	     <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-	     </div>
-	     <b-form-input v-model="form.groupName" type="text" class="form-control" name="groupName" v-bind:placeholder="'Workload ' + (index + 1)"></b-form-input>
 
-	     </div>
-	     </div>
-	-->
-	  <div class="form-group row pt-2 pb-4">
+	<div class="form-group row pb-3">
 	  <div class="col">
 	    <label label-for="quantity"><span class="small">Quantity</span>
 	      <a v-b-popover.hover="'The number of replicas of this application'" class="btn-primary-outline">
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
 	    </label>
-	    <input v-model.number="form.quantity" type="number" class="form-control right-text" name="quantity">
+	    <input v-model.number="form.quantity" type="number" class="form-control form-control-sm right-text" name="quantity">
 	    <span class="min-max">(1-10000)</span>
 	  </div>
 	  <div class="col">
@@ -67,8 +69,8 @@
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
 	    </label>
-	    <input v-model.number="form.cpu" type="number" class="form-control right-text" name="cpu">
-	    <span class="min-max">(1-128)</span>
+	    <b-form-input v-model.number="form.cpu" type="number" class="form-control form-control-sm right-text" name="cpu" step="0.01" min="0"></b-form-input>
+	    <span class="min-max">(0-128)</span>
 	  </div>
 	  <div class="col">
 	    <label for="memory"><span class="small">Memory (GB)</span>
@@ -76,33 +78,35 @@
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
 	    </label>
-	    <input v-model.number="form.memory" type="number" class="form-control right-text" name="memory">
-	    <span class="min-max">(1-12000)</span>
+	    <input v-model.number="form.memory" type="number" class="form-control form-control-sm right-text" name="memory"  step="any" min="0">
+	    <span class="min-max">(0-12000)</span>
 	  </div>
 	  <div class="col">
 	    <label for="blockStorage"><span class="small">Block Storage (GB)</span>&nbsp;
 	    </label>
-	    <input v-model.number="form.blockStorage" type="number" class="form-control right-text" name="blockStorage">
-	    <span class="min-max">(1-16000)</span>
+	    <input v-model.number="form.blockStorage" type="number" class="form-control form-control-sm right-text" name="blockStorage" min="0">
+	    <span class="min-max">(0-16000)</span>
 	  </div>
 	  <div class="col-md-1">
 	  </div>
 
 	</div>
       </template>
-
       <div class="row">
 	<div class="col align-self-end">
-	  <button v-on:click=addRow class="btn-link btn-transparent">
+	  <button v-on:click=addRow type="button" class="btn-link btn-transparent">
 	    <span data-feather="plus-circle"></span> Add Workload
-     </b-button>
+	  </button>
 	</div>
       </div>
       <div class="row">
 	<div class="offset-md-9 col-2 pt-4">
-	  <b-button class="btn-block" type="submit" variant="primary">Calculate</b-button>
+	  <b-button class="btn-block" type="submit" variant="primary">
+	    Calculate
+	  </b-button>
 	</div>
       </div>
+
     </b-form>
 
     <hr>
@@ -127,26 +131,28 @@
       </container>
       <h3>Estimate Details</h3>
       <container>
-      <table class="table">
-	<thead class="thead-light">
-	  <tr>
-	    <th scope="col">Workload Name</th>
-	    <th scope="col">Instance Type</th>
-	    <th scope="col">Instance Hourly Cost</th>
-	    <th scope="col">Workload Hourly Cost</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  <template v-for="(item, index) in costDetails">
+	<table class="table">
+	  <thead class="thead-light">
 	    <tr>
-	      <td>[[ item.workloadName ]]</td>
-	      <td>[[ item.instanceType ]]</td>
-	      <td>$[[ parseFloat(item.instanceHourlyCost.toFixed(4)) ]]</td>
-	      <td>$[[ parseFloat(item.hourlyCost.toFixed(2)) ]]</td>
+	      <th scope="col">Workload Name</th>
+	      <th scope="col">Instance Type</th>
+	      <th scope="col">Instance Hourly Cost</th>
+	      <th scope="col">Storage Hourly Cost</th>
+	      <th scope="col">Workload Hourly Cost</th>
 	    </tr>
-	  </template>
-	</tbody>
-      </table>
+	  </thead>
+	  <tbody>
+	    <template v-for="(item, index) in costDetails">
+	      <tr>
+		<td>[[ item.workloadName ]]</td>
+		<td>[[ item.instanceType ]]</td>
+		<td>$[[ parseFloat(item.instanceHourlyCost.toFixed(4)) ]]</td>
+		<td>$[[ parseFloat(item.storageCost.toFixed(4)) ]]</td>
+		<td>$[[ parseFloat(item.hourlyCost.toFixed(2)) ]]</td>
+	      </tr>
+	    </template>
+	  </tbody>
+	</table>
       </container>
     </div>
 
@@ -347,18 +353,23 @@
      </form>
      </div>
 -->
+<div class="container">
+  <ul>Todo: larger items
+    <li>Deal with errors better - display them in an alert bar</li>
+    <li>Add cloud cost comparison</li>
+  </ul>
+  <ul>Todo: Details
+    <li>Label for which cloud we're selecting</li>
+    <li>change tooltips to click? https://bootstrap-vue.js.org/docs/components/tooltip</li>
+    <li>Add instructions/blurb about how it works</li>
+    <li><strike>Note when an instance is t-unlimited</strike></li>
+    <li><strike>delete cost when user changes the cloud</strike></li>
+    <li><strike>add azure</strike></li>
+    <li><strike>add aws block storage costs</strike></li>
+    <li><strike>add cloud and add region</strike></li>
+    <li><strike>resize everything</strike></li>
+    <li><strike>fix return key deleting a row</strike></li>
+  </ul>
+</div>
 
 {% endblock %}
-
-<!-- {% block chartjs %}
-     <script src="static/Chart.js/2.7.3/Chart.min.js"></script>
-     <script>
-     (function () {
-     'use strict'
-     var ctx = document.getElementById('monthlyChart')
-     var monthlyChart = new Chart(ctx, {{ monthly_chart|tojson }} )
-     ctx = document.getElementById('categoryChart')
-     var categoryChart = new Chart(ctx, {{ category_chart|tojson }} )
-     }())
-     </script>
-     {% endblock %} -->

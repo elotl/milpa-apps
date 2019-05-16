@@ -8,13 +8,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 app = Flask(__name__)
 
-instance_selector = None
+instance_selectors = {}
 
 
 @app.before_first_request
 def setup():
     global instance_selector
-    instance_selector = make_instance_selector()
+    instance_selectors['aws'] = make_instance_selector('aws')
+    instance_selectors['azure'] = make_instance_selector('azure')
+
 
 def handle_exception(e, *args, **kwargs):
     error_message = 'Error processing request. ' + str(e)
@@ -40,7 +42,14 @@ def catch_errors(func):
     return wrapper
 
 
-#@catch_errors
+def to_float(v):
+    try:
+        return float(v)
+    except Exception:
+        return 0.0
+
+
+# @catch_errors
 def tester():
     return flask.render_template('tester.html')
 
@@ -64,21 +73,32 @@ def questionnaire():
 #
 @app.route('/cost', methods=['POST'])
 def get_cost():
-    region = 'us-east-1'
     data = request.get_json()
     print(data)
     response_details = []
     total_hourly_cost = 0
+    cloud = data['cloud']
+    inst_sel = instance_selectors[cloud]
+    region = data['region']
     for i, item in enumerate(data['items']):
+        cpu = to_float(item['cpu'])
+        memory = to_float(item['memory'])
+        block_storage = to_float(item['blockStorage'])
+        quantity = to_float(item['quantity'])
         workload_name = item['workloadName'] or 'Workload {}'.format(i + 1)
-        instance_type, hourly_cost = instance_selector.get_cheapest_instance(
-            item['cpu'], item['memory'], region)
-        workload_hourly_cost = item['quantity'] * hourly_cost
-        total_hourly_cost += hourly_cost
+        instance_type, instance_hourly_cost = inst_sel.get_cheapest_instance(
+            cpu, memory, region)
+        storage_hourly_cost = inst_sel.get_storage_price(
+            region, block_storage)
+        workload_storage_cost = quantity * storage_hourly_cost
+        workload_hourly_cost = ((quantity * instance_hourly_cost)
+                                + workload_storage_cost)
+        total_hourly_cost += workload_hourly_cost
         response_details.append({
             'workloadName': workload_name,
             'instanceType': instance_type,
-            'instanceHourlyCost': hourly_cost,
+            'instanceHourlyCost': instance_hourly_cost,
+            'storageCost': workload_storage_cost,
             'hourlyCost': workload_hourly_cost,
         })
     response = {
