@@ -16,5 +16,20 @@ spec:
       instanceType: t3.nano
       units:
       - name: dashboard
-        image: elotl/cost-calculator:0.8
+        image: elotl/cost-calculator:0.8.0
         command: ["/usr/local/bin/gunicorn", "-k", "gevent", "-w", "3", "-b", ":5000", "--access-logfile", "-", "--error-logfile", "-", "server:app"]
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cost-calculator
+spec:
+  selector:
+    matchLabels:
+      app: cost-calculator
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5000
+  sourceRanges:
+    - 0.0.0.0/0

@@ -59,6 +59,12 @@ def questionnaire():
     return flask.render_template('calculator.html')
 
 
+def get_percent(v):
+    v = to_float(v)
+    if v > 1.0:
+        v *= 0.01
+    return v
+
 # input data:
 # items = [
 # {workloadName: '', quantity: 1, cpu: 1, memory: 1, blockStorage: 0},
@@ -80,18 +86,20 @@ def get_cost():
     cloud = data['cloud']
     inst_sel = instance_selectors[cloud]
     region = data['region']
+
     for i, item in enumerate(data['items']):
         cpu = to_float(item['cpu'])
         memory = to_float(item['memory'])
         block_storage = to_float(item['blockStorage'])
         quantity = to_float(item['quantity'])
+        utilization = get_percent(item['utilization'])
         workload_name = item['workloadName'] or 'Workload {}'.format(i + 1)
         instance_type, instance_hourly_cost = inst_sel.get_cheapest_instance(
             cpu, memory, region)
         storage_hourly_cost = inst_sel.get_storage_price(
-            region, block_storage)
+            region, block_storage) * utilization
         workload_storage_cost = quantity * storage_hourly_cost
-        workload_hourly_cost = ((quantity * instance_hourly_cost)
+        workload_hourly_cost = ((quantity * instance_hourly_cost * utilization)
                                 + workload_storage_cost)
         total_hourly_cost += workload_hourly_cost
         response_details.append({

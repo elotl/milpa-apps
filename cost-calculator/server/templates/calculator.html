@@ -16,25 +16,25 @@
     <div class="col-md-1">
     </div>
 
-    <div class="row">
-      <div class="col-md-3">
-	<template>
-	  <div>
-	    <b-form-select class="selectpicker" v-model="selectedCloud" :options="cloudOptions" v-on:change=onChangeCloud></b-form-select>
-	  </div>
-	</template>
-      </div>
-
-      <div class="col-md-3">
-	<template>
-	  <div>
-	    <b-form-select class="selectpicker" v-model="selectedRegion" :options="regionOptions"></b-form-select>
-	  </div>
-	</template>
-      </div>
-    </div>
-
     <b-form @submit="onSubmit">
+      <div class="row align-items-center">
+
+	<div class="col-md-3">
+
+	  <template>
+	    <span class="small">Cloud Provider:</span>
+	    <b-form-select class="selectpicker" v-model="selectedCloud" :options="cloudOptions" v-on:change=onChangeCloud id="cloud-selector"></b-form-select>
+      	  </template>
+	</div>
+
+	<div class="offset-md-5 col-md-3">
+	  <template>
+	    <span class="small">Region:</span>
+	    <b-form-select class="selectpicker" v-model="selectedRegion" :options="regionOptions"></b-form-select>
+	  </template>
+	</div>
+      </div>
+
       <template v-for="(form, index) in items">
 	<div class="row pt-5">
 	  <div class="col">
@@ -62,6 +62,15 @@
 	    </label>
 	    <input v-model.number="form.quantity" type="number" class="form-control form-control-sm right-text" name="quantity">
 	    <span class="min-max">(1-10000)</span>
+	  </div>
+	  <div class="col">
+	    <label label-for="utilization"><span class="small">% Utilization/Month</span>
+	      <a v-b-popover.hover="'Percentage of time per month this workload will be running'" class="btn-primary-outline">
+		<span class="info-icon" data-feather="info"></span>
+	      </a>
+	    </label>
+	    <input v-model.number="form.utilization" type="number" min="0" max="100" step="1" class="form-control form-control-sm right-text" name="utilization">
+	    <span class="min-max">(0-100)</span>
 	  </div>
 	  <div class="col">
 	    <label for="cpu"><span class="small">vCPU</span>
@@ -174,7 +183,7 @@
     <li>Add cloud cost comparison</li>
   </ul>
   <ul>Todo: Details
-    <li>Label for which cloud we're selecting</li>
+    <li><strike>Label for which cloud we're selecting</strike></li>
     <li>change tooltips to click? https://bootstrap-vue.js.org/docs/components/tooltip</li>
     <li>Add instructions/blurb about how it works</li>
     <li><strike>Note when an instance is t-unlimited</strike></li>

@@ -69,6 +69,7 @@ var app = new Vue({
 		{
 		    workloadName: '',
 		    quantity: 1,
+		    utilization: 100,
 		    cpu: 1,
 		    memory: 1,
 		    blockStorage: 0

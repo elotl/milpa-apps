@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
 
     <title>{% block title %}{% endblock %}</title>
 
@@ -39,47 +37,46 @@
      }
 
     </style>
-    <!-- Custom styles for this template -->
-
-    <link href="static/dashboard.css" rel="stylesheet">
+    <!-- Custom styles for this bootstrap template -->
+    <link type="text/css" rel="stylesheet" href="/static/dashboard.css" rel="stylesheet">
     <!-- Load required Bootstrap and BootstrapVue CSS -->
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link type="text/css" rel="stylesheet" href="/static/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/static/bootstrap-vue/bootstrap-vue.min.css" />
 
     <!-- Load polyfills to support older browsers -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CMutationObserver" crossorigin="anonymous"></script>
 
     <!-- Load Vue followed by BootstrapVue -->
-    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="/static/vue/vue.min.js"></script>
+    <script src="/static/bootstrap-vue/bootstrap-vue.min.js"></script>
     <!-- Async requests -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/axios/axios.min.js"></script>
   </head>
   <body>
 
-  {% include 'navbar.html' %}
-  <div class="container-fluid">
-    <div class="row">
-      {% include 'sidebar.html' %}
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-	{% if error_message %}
-	<div class="p-2 mb-2 bg-danger text-white">
-	  <p>
-	    <strong>Erorr:</strong> {{ error_message }}
-	  </p>
-	</div>
-	{% endif %}
+    {% include 'navbar.html' %}
+    <div class="container-fluid">
+      <div class="row">
+	{% include 'sidebar.html' %}
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+	  {% if error_message %}
+	  <div class="p-2 mb-2 bg-danger text-white">
+	    <p>
+	      <strong>Erorr:</strong> {{ error_message }}
+	    </p>
+	  </div>
+	  {% endif %}
 
-	{% block content %}{% endblock %}
-      </main>
+	  {% block content %}{% endblock %}
+	</main>
+      </div>
     </div>
-  </div>
 
-  <script src="static/popper/popper.min.js"></script>
-  <script src="static/feather/feather.min.js"></script>
-  <script>
-   feather.replace()
-  </script>
+    <script src="/static/popper/popper.min.js"></script>
+    <script src="/static/feather/feather.min.js"></script>
+    <script>
+     feather.replace()
+    </script>
 
   </body>
 </html>
