@@ -16,20 +16,34 @@ spec:
       instanceType: t3.nano
       units:
       - name: dashboard
-        image: elotl/cost-calculator:0.8.0
+        image: elotl/cost-calculator:0.9.0
         command: ["/usr/local/bin/gunicorn", "-k", "gevent", "-w", "3", "-b", ":5000", "--access-logfile", "-", "--error-logfile", "-", "server:app"]
+      - name: https-redirect
+        image: 689494258501.dkr.ecr.us-east-1.amazonaws.com/https-redirect:1.0.0
+
 ---
 kind: Service
 apiVersion: v1
 metadata:
+  annotations:
+    service.elotl.co/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    # service.elotl.co/aws-load-balancer-ssl-ports: "443"
+    # service.elotl.co/aws-load-balancer-backend-protocol: "http"
+    # service.elotl.co/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:689494258501:certificate/05bd8e09-9275-4c26-ad61-5de8097b770b"
   name: cost-calculator
 spec:
+  type: LoadBalancer
   selector:
     matchLabels:
       app: cost-calculator
   ports:
     - name: http
       protocol: TCP
-      port: 5000
+      port: 80
+      nodePort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      nodePort: 5000
   sourceRanges:
     - 0.0.0.0/0

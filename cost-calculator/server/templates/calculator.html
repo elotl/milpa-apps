@@ -6,28 +6,31 @@
 {% block content %}
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
-  <h3 class="h3">On-Prem Infrastructure Questionnaire</h3>
+  <h2 class="h3">Cloud Migration Cost Estimator</h2>
 </div>
+<p class="lead">Enter the details of your on-premise workloads. The calculator will estimate the cost of running your workloads using Elotl on public cloud.
+</p>
+<p class="small"><i>Note: The estimated cost only includes the cost of compute instances and storage. Charges for network traffic, load balancers and other cloud services are not included in this estimate.</i></p>
 <hr>
 
-<div id="app">
 
+<div id="app">
   <div class="container">
     <div class="col-md-1">
     </div>
 
     <b-form @submit="onSubmit">
-      <div class="row align-items-center">
+      <div class="row align-items-center pb-3">
 
 	<div class="col-md-3">
 
 	  <template>
-	    <span class="small">Cloud Provider:</span>
-	    <b-form-select class="selectpicker" v-model="selectedCloud" :options="cloudOptions" v-on:change=onChangeCloud id="cloud-selector"></b-form-select>
+	    <span class="small">Target Cloud Provider:</span>
+	    <b-form-select class="selectpicker" v-model="selectedCloud" :options="cloudOptions" v-on:change=onChangeCloud></b-form-select>
       	  </template>
 	</div>
 
-	<div class="offset-md-5 col-md-3">
+	<div class="col-md-3">
 	  <template>
 	    <span class="small">Region:</span>
 	    <b-form-select class="selectpicker" v-model="selectedRegion" :options="regionOptions"></b-form-select>
@@ -47,7 +50,7 @@
 	  </div>
 	  <div class="col-md-1 align-self-end">
 	    <button v-on:click=onDeleteRow(index) type="button" class="btn btn-link">
-	      <span class="trash-icon" data-feather="trash-2"></span>
+	      <span class="trash-icon feather-32" data-feather="trash-2"></span>
 	    </button>
 	  </div>
 	</div>
@@ -55,7 +58,7 @@
 
 	<div class="form-group row pb-3">
 	  <div class="col">
-	    <label label-for="quantity"><span class="small">Quantity</span>
+	    <label label-for="quantity" class="mb-1"><span class="small">Quantity</span>
 	      <a v-b-popover.hover="'The number of replicas of this application'" class="btn-primary-outline">
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
@@ -64,7 +67,7 @@
 	    <span class="min-max">(1-10000)</span>
 	  </div>
 	  <div class="col">
-	    <label label-for="utilization"><span class="small">% Utilization/Month</span>
+	    <label label-for="utilization" class="mb-1"><span class="small">% Utilization/Month</span>
 	      <a v-b-popover.hover="'Percentage of time per month this workload will be running'" class="btn-primary-outline">
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
@@ -73,7 +76,7 @@
 	    <span class="min-max">(0-100)</span>
 	  </div>
 	  <div class="col">
-	    <label for="cpu"><span class="small">vCPU</span>
+	    <label for="cpu" class="mb-1"><span class="small">vCPU</span>
 	      <a v-b-popover.hover="'Number of vCPUs/hyperthreads used by the application. One physical core is composed 2 vCPUs. Fractional values are OK.'" class="btn-primary-outline">
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
@@ -82,7 +85,7 @@
 	    <span class="min-max">(0-128)</span>
 	  </div>
 	  <div class="col">
-	    <label for="memory"><span class="small">Memory (GB)</span>
+	    <label for="memory" class="mb-1"><span class="small">Memory (GB)</span>
 	      <a v-b-popover.hover="'Amount of memory used by the application'" class="btn-primary-outline">
 		<span class="info-icon" data-feather="info"></span>
 	      </a>
@@ -91,25 +94,25 @@
 	    <span class="min-max">(0-12000)</span>
 	  </div>
 	  <div class="col">
-	    <label for="blockStorage"><span class="small">Block Storage (GB)</span>&nbsp;
+	    <label for="blockStorage" class="mb-1"><span class="small">Block Storage (GB)</span>&nbsp;
 	    </label>
 	    <input v-model.number="form.blockStorage" type="number" class="form-control form-control-sm right-text" name="blockStorage" min="0">
 	    <span class="min-max">(0-16000)</span>
 	  </div>
-	  <div class="col-md-1">
-	  </div>
-
+	  <!-- <div class="col-md-1">
+	       </div>
+	  -->
 	</div>
       </template>
-      <div class="row">
+      <div class="row ">
 	<div class="col align-self-end">
-	  <button v-on:click=addRow type="button" class="btn-link btn-transparent">
-	    <span data-feather="plus-circle"></span> Add Workload
+	  <button v-on:click=addRow type="button" class="text-primary btn-transparent">
+	    <span data-feather="plus-circle"></span><span class="lead"> Add Workload</span>
 	  </button>
 	</div>
       </div>
       <div class="row">
-	<div class="offset-md-9 col-2 pt-4">
+	<div class="offset-md-10 col-2 pt-4">
 	  <b-button class="btn-block" type="submit" variant="primary">
 	    Calculate
 	  </b-button>
@@ -118,81 +121,88 @@
 
     </b-form>
 
-    <hr>
+
 
     <div v-if="showCost">
+      <hr>
       <h3>Estimated Cloud Costs</h3>
       <container>
 	<strong>
+	  <!-- <div class="row justify-content-center text-right">
+	       <div class="col-md-2 offset-md-6">Hourly Cost:</div>
+	       <div class="col-md-2">$[[ parseFloat(cost.hourlyCost.toFixed(4)) ]]</div>
+	       </div> -->
 	  <div class="row justify-content-center text-right">
-	    <div class="col-md-2 offset-md-6">Hourly Cost:</div>
-	    <div class="col-md-2">$[[ parseFloat(cost.hourlyCost.toFixed(4)) ]]</div>
+	    <div class="col-md-2 offset-md-8">Monthly Cost:</div>
+	    <div class="col-md-2">$[[ toDollar(cost.monthlyCost) ]]</div>
 	  </div>
 	  <div class="row justify-content-center text-right">
-	    <div class="col-md-2 offset-md-6">Monthly Cost:</div>
-	    <div class="col-md-2">$[[ parseFloat((cost.hourlyCost * 720).toFixed(2)) ]]</div>
-	  </div>
-	  <div class="row justify-content-center text-right">
-	    <div class="col-md-2 offset-md-6">Yearly Cost:</div>
-	    <div class="col-md-2">$[[ parseFloat((cost.hourlyCost * 8760).toFixed(2)) ]]</div>
+	    <div class="col-md-2 offset-md-8">Yearly Cost:</div>
+	    <div class="col-md-2">$[[ toDollar(cost.monthlyCost * 12) ]]</div>
 	  </div>
 	</strong>
       </container>
-      <h3>Estimate Details</h3>
-      <container>
-	<table class="table">
-	  <thead class="thead-light">
-	    <tr>
-	      <th scope="col">Workload Name</th>
-	      <th scope="col">Instance Type</th>
-	      <th scope="col">Instance Hourly Cost</th>
-	      <th scope="col">Storage Hourly Cost</th>
-	      <th scope="col">Workload Hourly Cost</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    <template v-for="(item, index) in costDetails">
+
+      <div class="pt-5">
+	<container>
+	  <table class="table">
+	    <thead class="thead-light">
 	      <tr>
-		<td>[[ item.workloadName ]]</td>
-		<td>[[ item.instanceType ]]</td>
-		<td>$[[ parseFloat(item.instanceHourlyCost.toFixed(4)) ]]</td>
-		<td>$[[ parseFloat(item.storageCost.toFixed(4)) ]]</td>
-		<td>$[[ parseFloat(item.hourlyCost.toFixed(2)) ]]</td>
+		<th scope="col">Workload Name</th>
+		<th scope="col">Instance Type</th>
+		<th scope="col">Instance Hourly Cost</th>
+		<th scope="col">Storage Hourly Cost</th>
+		<th scope="col">Workload Montly Cost</th>
 	      </tr>
-	    </template>
-	  </tbody>
-	</table>
-      </container>
+	    </thead>
+	    <tbody>
+	      <template v-for="(item, index) in costDetails">
+		<tr>
+		  <td>[[ item.workloadName ]]</td>
+		  <td>[[ item.instanceType ]]</td>
+		  <!-- <td>$[[ parseFloat(item.instanceHourlyCost.toFixed(4)) ]]</td>
+		       <td>$[[ parseFloat(item.storageCost.toFixed(4)) ]]</td>
+		       <td>$[[ parseFloat(item.monthlyCost.toFixed(2)) ]]</td> -->
+		  <td>$[[ parseFloat(item.instanceHourlyCost.toFixed(4)) ]]</td>
+		  <td>$[[ parseFloat(item.storageCost.toFixed(4)) ]]</td>
+		  <td>$[[ toDollar(item.monthlyCost) ]]</td>
+		</tr>
+	      </template>
+	    </tbody>
+	  </table>
+	</container>
+      </div>
+      <div>
+	<h3>Cloud Comparison</h3>
+	<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+      </div>
+
+      <!-- <b-card class="mt-3" header="Form Data Result">
+	   <pre class="m-0">[[ items ]]</pre>
+	   </b-card>
+	   <div v-if="showCost">
+	   <b-card class="mt-3" header="Response">
+	   <pre class="m-0">[[ costDetails ]]</pre>
+	   </b-card>
+	   </div> -->
     </div>
-    <!-- <b-card class="mt-3" header="Form Data Result">
-	 <pre class="m-0">[[ items ]]</pre>
-	 </b-card>
-	 <div v-if="showCost">
-	 <b-card class="mt-3" header="Response">
-	 <pre class="m-0">[[ costDetails ]]</pre>
-	 </b-card>
-	 </div> -->
   </div>
 </div>
 
 <script src="static/calculator.js"></script>
 
-<div class="container">
-  <ul>Todo: larger items
-    <li>Deal with errors better - display them in an alert bar</li>
+
+<div class="pt-6 nope">
+  <hr>
+  <h4>Todo: larger items</h4>
+  <ul>
+    <li>Consider a whole page app with everything on one page</li>
     <li>Add cloud cost comparison</li>
+    <li>Deal with errors better - display them in an alert bar</li>
   </ul>
-  <ul>Todo: Details
-    <li><strike>Label for which cloud we're selecting</strike></li>
-    <li>change tooltips to click? https://bootstrap-vue.js.org/docs/components/tooltip</li>
+  <h4>Todo: Details</h4>
+  <ul>
     <li>Add instructions/blurb about how it works</li>
-    <li><strike>Note when an instance is t-unlimited</strike></li>
-    <li><strike>delete cost when user changes the cloud</strike></li>
-    <li><strike>add azure</strike></li>
-    <li><strike>add aws block storage costs</strike></li>
-    <li><strike>add cloud and add region</strike></li>
-    <li><strike>resize everything</strike></li>
-    <li><strike>fix return key deleting a row</strike></li>
   </ul>
 </div>
 

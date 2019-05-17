@@ -57,6 +57,8 @@ clouds = [
     // {value: 'google', text: 'Google'}
 ]
 
+var myChart;
+
 var app = new Vue({
     el: '#app',
     data: function () {
@@ -77,12 +79,19 @@ var app = new Vue({
 	    ],
 	    cost: null,
 	    costDetails: null,
+	    costComparisonChart: null,
 	}
     },
+
     updated: function () {
 	feather.replace()
+	this.createChart();
     },
+
     methods: {
+	toDollar: function(val) {
+	    return (val).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+	},
     	onSubmit: function(event) {
 	    console.log("submit")
 	    event.preventDefault()
@@ -98,6 +107,7 @@ var app = new Vue({
 		    console.log(response.data);
 		    v.cost = response.data;
 		    v.costDetails = response.data.details;
+		    v.costComparisonChart = response.data.costComparisonChart;
 		})
 		.catch(function (error) {
 		    console.log(error);
@@ -107,11 +117,12 @@ var app = new Vue({
 	    console.log("add row");
 	    event.preventDefault();
     	    this.items.push({
-		    workloadName: '',
-		    quantity: 1,
-		    cpu: 1,
-		    memory: 1,
-		    blockStorage: 0
+		workloadName: '',
+		quantity: 1,
+		utilization: 100,
+		cpu: 1,
+		memory: 1,
+		blockStorage: 0
 	    });
 	},
 	onDeleteRow: function(index) {
@@ -130,11 +141,26 @@ var app = new Vue({
 	    this.cost = null
 	    this.costDetails = null
 	    this.selectedRegion = this.regionOptions[0].value
+	},
+	createChart: function() {
+	    if (this.costComparisonChart != null) {
+		console.log("Creating chart")
+	    	ctx = document.getElementById('myChart');
+		if (myChart) {
+		    myChart.destroy();
+		}
+	    	myChart = new Chart(ctx, this.costComparisonChart);
+	    } else {
+		console.log("Not creating chart")
+	    }
 	}
     },
     computed: {
 	showCost: function() {
 	    return this.cost != null;
+	},
+	showComparison: function() {
+	    return this.costComparisonChart != null;
 	}
     },
     delimiters: ["[[","]]"]
