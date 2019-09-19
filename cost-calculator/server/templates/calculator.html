@@ -5,13 +5,28 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
-  <h2 class="h3">Cloud Migration Cost Estimator</h2>
+<div class="container pb-4">
+  <!-- <div class="col-md-1">
+       </div> -->
+  <div class="row">
+  <div class="col-12">
+    <h2 class="h2">Cloud Migration Cost Estimator</h2>
+
+    <p class="lead">Enter the details of your on-premise workloads. The calculator will estimate the cost of running your workloads using Elotl on public cloud.
+    </p>
+    <p class="small"><i>Note: The estimated cost only includes the cost of compute instances and storage. Charges for network traffic, load balancers and other cloud services are not included in this estimate.</i></p>
+    <hr>
+  </div>
+  </div>
 </div>
-<p class="lead">Enter the details of your on-premise workloads. The calculator will estimate the cost of running your workloads using Elotl on public cloud.
-</p>
-<p class="small"><i>Note: The estimated cost only includes the cost of compute instances and storage. Charges for network traffic, load balancers and other cloud services are not included in this estimate.</i></p>
-<hr>
+<!-- </div>
+     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-1 mb-1 ">
+     <h2 class="h3">Cloud Migration Cost Estimator</h2>
+     </div>
+     <p class="lead">Enter the details of your on-premise workloads. The calculator will estimate the cost of running your workloads using Elotl on public cloud.
+     </p>
+     <p class="small"><i>Note: The estimated cost only includes the cost of compute instances and storage. Charges for network traffic, load balancers and other cloud services are not included in this estimate.</i></p> -->
+
 
 
 <div id="app">
@@ -67,7 +82,7 @@
 	    <span class="min-max">(1-10000)</span>
 	  </div>
 	  <div class="col">
-	    <label label-for="utilization" class="mb-1"><span class="small">% Utilization/Month</span>
+	    <label label-for="utilization" class="mb-1"><span class="small">% Uptime</span>
 	      <a v-b-popover.hover="'Percentage of time per month this workload will be running'" class="btn-primary-outline">
 		<span class="info-icon" data-feather="info"></span>
 	      </a>

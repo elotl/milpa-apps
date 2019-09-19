@@ -162,33 +162,6 @@ def get_cost():
     cloud = data['cloud']
     region = data['region']
     workload_costs, workload_total = compute_single_cloud_costs(cloud, region, data)
-    # azure_region = 'Central US'
-    # azure_costs, azure_total = compute_single_cloud_costs('azure', azure_region, data)
-
-    # inst_sel = instance_selectors[cloud]
-    # for i, item in enumerate(data['items']):
-    #     cpu = to_float(item['cpu'])
-    #     memory = to_float(item['memory'])
-    #     block_storage = to_float(item['blockStorage'])
-    #     quantity = to_float(item['quantity'])
-    #     utilization = get_percent(item['utilization'])
-    #     workload_name = item['workloadName'] or 'Workload {}'.format(i + 1)
-    #     instance_type, instance_hourly_cost = inst_sel.get_cheapest_instance(
-    #         cpu, memory, region)
-    #     storage_hourly_cost = inst_sel.get_storage_price(region, block_storage)
-    #     workload_hourly_cost = (utilization * quantity *
-    #                             (instance_hourly_cost + storage_hourly_cost))
-    #     total_monthly_cost += workload_hourly_cost * 720
-    #     response_details.append({
-    #         'workloadName': workload_name,
-    #         'instanceType': instance_type,
-    #         'instanceHourlyCost': instance_hourly_cost,
-    #         'storageCost': storage_hourly_cost,
-    #         'monthlyCost': workload_hourly_cost * 720,
-    #     })
-
-    # aws_data = [d['monthlyCost'] for d in aws_costs]
-    # azure_data = [d['monthlyCost'] for d in azure_costs]
     comparison_chart = create_comparison(
         cloud, region, data, workload_costs)
     response = {
