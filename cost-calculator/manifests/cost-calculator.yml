@@ -3,28 +3,30 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cost-calculator
+  labels:
+    app: cost-calculator
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: cost-calculator
   template:
     metadata:
-      name: cost-calculator
       labels:
         app: cost-calculator
-      annotations:
-        kubernetes.io/target-runtime: kiyot
-        pod.elotl.co/instance-type: t3.nano
     spec:
       nodeSelector:
-        kubernetes.io/role: milpa-worker
+        type: virtual-kubelet
+      tolerations:
+      - key: virtual-kubelet.io/provider
+        operator: Exists
+      containers:
       containers:
       - name: dashboard
-        image: elotl/cost-calculator:0.9.2
+        image: elotl/cost-calculator:0.9.3
         command: ["/usr/local/bin/gunicorn", "-k", "gevent", "-w", "3", "-b", ":5000", "--access-logfile", "-", "--error-logfile", "-", "server:app"]
       - name: https-redirect
         image: 689494258501.dkr.ecr.us-east-1.amazonaws.com/https-redirect:1.0.0
-
 ---
 kind: Service
 apiVersion: v1
